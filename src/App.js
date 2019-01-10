@@ -1,10 +1,25 @@
-import React from "react";
+import React, { Component } from 'react';
+import { renderRoutes } from 'react-router-config';
 
-export default function App() {
-  return (
-    <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start edit to see some magic happen!</h2>
-    </div>
-  );
+import { GeneralProvider } from './contexts/GeneralContext';
+
+export default class App extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			buttonColor: 'green',
+			buttonBackground: '#282C2E',
+			buttonText: 'Hello from the other side',
+		};
+	}
+	render() {
+		return (
+			<div className="App">
+				<GeneralProvider value={this.state}>
+					{renderRoutes(this.props.route.routes)}
+				</GeneralProvider>
+			</div>
+		);
+	}
 }
