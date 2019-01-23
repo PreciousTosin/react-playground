@@ -28,6 +28,9 @@ const Navbar = () => (
 				<Link className="nav-item nav-link" to="/test">
 					Test
 				</Link>
+				<Link className="nav-item nav-link" to="/counter">
+					Counter
+				</Link>
 			</div>
 		</div>
 	</nav>

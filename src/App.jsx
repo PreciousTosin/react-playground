@@ -11,7 +11,10 @@ export default class App extends Component {
 		this.state = {
 			buttonColor: 'green',
 			buttonBackground: '#282C2E',
-			buttonText: 'Hello from the other side'
+			border: 'none',
+			borderRadius: '5px',
+			buttonText: 'Hello from the other side',
+			cursor: 'pointer'
 		};
 	}
 	render() {

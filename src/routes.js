@@ -1,6 +1,7 @@
 import App from './App';
 import Home from './components/Home';
 import Test from './components/Test';
+import Counter from './components/Counter';
 
 const routes = [
 	{
@@ -15,6 +16,11 @@ const routes = [
 				path: '/test',
 				exact: 'true',
 				component: Test
+			},
+			{
+				path: '/counter',
+				exact: 'true',
+				component: Counter
 			}
 		]
 	}

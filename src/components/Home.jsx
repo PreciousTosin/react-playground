@@ -12,7 +12,9 @@ export default function Home() {
 					<button
 						style={{
 							color: context.buttonColor,
-							backgroundColor: context.buttonBackground
+							backgroundColor: context.buttonBackground,
+							border: context.border,
+							borderRadius: context.borderRadius
 						}}
 					>
 						{context.buttonText}
