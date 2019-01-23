@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { renderRoutes } from 'react-router-config';
 
 import { GeneralProvider } from './contexts/GeneralContext';
+import Navbar from './components/layouts/Navbar';
 
 export default class App extends Component {
 	constructor(props) {
@@ -10,13 +11,14 @@ export default class App extends Component {
 		this.state = {
 			buttonColor: 'green',
 			buttonBackground: '#282C2E',
-			buttonText: 'Hello from the other side',
+			buttonText: 'Hello from the other side'
 		};
 	}
 	render() {
 		return (
 			<div className="App">
 				<GeneralProvider value={this.state}>
+					<Navbar />
 					{renderRoutes(this.props.route.routes)}
 				</GeneralProvider>
 			</div>

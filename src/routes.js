@@ -1,5 +1,6 @@
 import App from './App';
 import Home from './components/Home';
+import Test from './components/Test';
 
 const routes = [
 	{
@@ -9,6 +10,11 @@ const routes = [
 				path: '/',
 				exact: 'true',
 				component: Home
+			},
+			{
+				path: '/test',
+				exact: 'true',
+				component: Test
 			}
 		]
 	}
