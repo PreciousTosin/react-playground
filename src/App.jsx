@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { renderRoutes } from 'react-router-config';
+import { withEffects } from 'refract-rxjs';
+import { interval } from 'rxjs';
 
 import { GeneralProvider } from './contexts/GeneralContext';
 import Navbar from './components/layouts/Navbar';
+import store from './store';
 
-export default class App extends Component {
+class App extends Component {
 	constructor(props) {
 		super(props);
 
@@ -18,9 +21,10 @@ export default class App extends Component {
 		};
 	}
 	render() {
+		const context = { style: this.state, store: store };
 		return (
 			<div className="App">
-				<GeneralProvider value={this.state}>
+				<GeneralProvider value={context}>
 					<Navbar />
 					{renderRoutes(this.props.route.routes)}
 				</GeneralProvider>
@@ -28,3 +32,9 @@ export default class App extends Component {
 		);
 	}
 }
+
+const aperture = (component, initialProps) => {
+	return interval(1000);
+};
+const AppWithEffects = withEffects(aperture)(App);
+export default App;

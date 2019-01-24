@@ -13,7 +13,8 @@ const store = createStore(
 	reducer(history),
 	{},
 	composeEnhancers(
-		applyMiddleware(refractEnhancer, routingMiddleware)
+		refractEnhancer(),
+		applyMiddleware(routingMiddleware)
 	)
 );
 

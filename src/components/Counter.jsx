@@ -1,27 +1,29 @@
 import React, { Component } from 'react';
-import { withEffects } from 'refract-rxjs';
-import { scan, startWith } from 'rxjs/operators';
+import { withEffects, toProps } from 'refract-rxjs';
+import { combineLatest } from 'rxjs';
+import { scan, startWith, map } from 'rxjs/operators';
 
 import { GeneralConsumer } from '../contexts/GeneralContext';
 
-function Counter({ count, increment }) {
+function Counter(props) {
+	console.log('PROPS', props);
 	return (
 		<GeneralConsumer>
-			{context => (
+			{({ style }) => (
 				<div>
 					<h1>Refract Testing Section</h1>
-					<p>Work done here is for refractive programming!</p>
+					<p>Work done here is for reactive programming!</p>
 					<button
 						style={{
-							color: context.buttonColor,
-							backgroundColor: context.buttonBackground,
-							border: context.border,
-							borderRadius: context.borderRadius,
-							cursor: context.cursor
+							color: style.buttonColor,
+							backgroundColor: style.buttonBackground,
+							border: style.border,
+							borderRadius: style.borderRadius,
+							cursor: style.cursor
 						}}
-						onClick={increment}
+						/* onClick={increment} */
 					>
-						Count: {count}
+						Count: count
 					</button>
 				</div>
 			)}
@@ -29,17 +31,26 @@ function Counter({ count, increment }) {
 	);
 }
 
-const aperture = (component, { initialCount }) => {
-	const [addOneEvents$, addOne] = component.useEvent('adOne');
-	return addOneEvents$.pipe(
+const getCount = () => state => state.count.count;
+
+const aperture = (component, { store }) => {
+	const [incrementEvents$, increment] = component.useEvent(
+		'increment'
+	);
+
+	// console.log(store);
+	const count = store.observe(getCount);
+	console.log(count);
+	return combineLatest(count, incrementEvents$).pipe(
 		startWith({
-			count: initialCount,
-			addOne
+			count: 0,
+			increment
 		}),
 		scan(({ count, ...props }) => ({
 			...props,
 			count: count + 1
-		}))
+		})),
+		map(toProps)
 	);
 };
 const handler = initialProps => effect => {};
@@ -49,17 +60,11 @@ const CounterWithEffects = withEffects(aperture, { handler })(
 );
 
 class CounterContainer extends Component {
-	state = { count: 0 };
-
-	increment = () =>
-		this.setState(({ count }) => ({ count: count + 1 }));
-
 	render() {
 		return (
-			<CounterWithEffects
-				count={this.state.count}
-				increment={this.increment}
-			/>
+			<GeneralConsumer>
+				{({ store }) => <CounterWithEffects store={store} />}
+			</GeneralConsumer>
 		);
 	}
 }
