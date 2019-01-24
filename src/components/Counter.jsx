@@ -23,7 +23,7 @@ function Counter(props) {
 						}}
 						/* onClick={increment} */
 					>
-						Count: count
+						Count: {props.count}
 					</button>
 				</div>
 			)}
@@ -39,9 +39,9 @@ const aperture = (component, { store }) => {
 	);
 
 	// console.log(store);
-	const count = store.observe(getCount);
-	console.log(count);
-	return combineLatest(count, incrementEvents$).pipe(
+	const count$ = store.observe(getCount);
+	console.log(count$);
+	return combineLatest(count$, incrementEvents$).pipe(
 		startWith({
 			count: 0,
 			increment
