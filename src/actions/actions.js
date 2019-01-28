@@ -1,5 +1,5 @@
 export default {
-	increaseCount: count => ({
+	increaseCountAction: count => ({
 		type: 'INCREMENT',
 		payload: count
 	})

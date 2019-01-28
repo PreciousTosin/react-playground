@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { GeneralConsumer } from '../contexts/GeneralContext';
+import SwitchButton from './custom/SwitchButton';
 
 export default function Home() {
 	return (
@@ -19,6 +20,9 @@ export default function Home() {
 					>
 						{style.buttonText}
 					</button>
+
+					<h2 className="mt-4">Switch Button</h2>
+					<SwitchButton />
 				</div>
 			)}
 		</GeneralConsumer>

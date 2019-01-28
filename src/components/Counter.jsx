@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { withEffects, toProps } from 'refract-rxjs';
-import { combineLatest } from 'rxjs';
+import { combineLatest, merge } from 'rxjs';
 import { scan, startWith, map } from 'rxjs/operators';
 
 import { GeneralConsumer } from '../contexts/GeneralContext';
+import actions from '../actions/actions';
 
 function Counter(props) {
 	console.log('PROPS', props);
@@ -21,7 +22,7 @@ function Counter(props) {
 							borderRadius: style.borderRadius,
 							cursor: style.cursor
 						}}
-						/* onClick={increment} */
+						onClick={props.increaseCount}
 					>
 						Count: {props.count}
 					</button>
@@ -34,17 +35,17 @@ function Counter(props) {
 const getCount = () => state => state.count.count;
 
 const aperture = (component, { store }) => {
-	const [incrementEvents$, increment] = component.useEvent(
-		'increment'
+	const [increaseCountEvents$, increaseCount] = component.useEvent(
+		'increaseCount'
 	);
 
 	// console.log(store);
 	const count$ = store.observe(getCount);
 	console.log(count$);
-	return combineLatest(count$, incrementEvents$).pipe(
+	const combine$ = combineLatest(count$, increaseCountEvents$).pipe(
 		startWith({
 			count: 0,
-			increment
+			increaseCount
 		}),
 		scan(({ count, ...props }) => ({
 			...props,
@@ -52,8 +53,23 @@ const aperture = (component, { store }) => {
 		})),
 		map(toProps)
 	);
+
+	// map(actions.increaseCountAction),
+	//map(toDispatch),
+	return combine$;
 };
-const handler = initialProps => effect => {};
+const handler = initialProps => effect => {
+	const { store } = initialProps;
+
+	if (effect.type === 'INCREMENT') {
+		store.dispatch(effect.payload);
+	}
+};
+
+const toDispatch = action => ({
+	type: action.type,
+	payload: action.payload
+});
 
 const CounterWithEffects = withEffects(aperture, { handler })(
 	Counter
