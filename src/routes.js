@@ -2,6 +2,7 @@ import App from './App';
 import Home from './components/Home';
 import Test from './components/Test';
 import Counter from './components/Counter';
+import Tooltip from './components/tooltip/index';
 
 const routes = [
 	{
@@ -9,18 +10,23 @@ const routes = [
 		routes: [
 			{
 				path: '/',
-				exact: 'true',
+				exact: true,
 				component: Home
 			},
 			{
 				path: '/test',
-				exact: 'true',
+				exact: true,
 				component: Test
 			},
 			{
 				path: '/counter',
-				exact: 'true',
+				exact: true,
 				component: Counter
+			},
+			{
+				path: '/tooltip',
+				exact: true,
+				component: Tooltip
 			}
 		]
 	}

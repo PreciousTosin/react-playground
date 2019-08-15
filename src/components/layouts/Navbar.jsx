@@ -17,10 +17,7 @@ const Navbar = () => (
 		>
 			<span className="navbar-toggler-icon" />
 		</button>
-		<div
-			className="collapse navbar-collapse"
-			id="navbarNavAltMarkup"
-		>
+		<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 			<div className="navbar-nav">
 				<Link className="nav-item nav-link active" to="/">
 					Home <span className="sr-only">(current)</span>
@@ -30,6 +27,9 @@ const Navbar = () => (
 				</Link>
 				<Link className="nav-item nav-link" to="/counter">
 					Counter
+				</Link>
+				<Link className="nav-item nav-link" to="/tooltip">
+					Tool Tip
 				</Link>
 			</div>
 		</div>

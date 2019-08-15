@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { withEffects, toProps } from 'refract-rxjs';
-import { combineLatest, merge } from 'rxjs';
-import { scan, startWith, map } from 'rxjs/operators';
+import { connect } from 'react-redux';
+import { withEffects } from 'refract-rxjs';
+// import { combineLatest, merge, interval } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { GeneralConsumer } from '../contexts/GeneralContext';
 import actions from '../actions/actions';
+import actionTypes from '../actions/action-types';
 
 function Counter(props) {
 	console.log('PROPS', props);
@@ -22,7 +24,7 @@ function Counter(props) {
 							borderRadius: style.borderRadius,
 							cursor: style.cursor
 						}}
-						onClick={props.increaseCount}
+						onClick={props.addCount}
 					>
 						Count: {props.count}
 					</button>
@@ -32,54 +34,55 @@ function Counter(props) {
 	);
 }
 
-const getCount = () => state => state.count.count;
-
-const aperture = (component, { store }) => {
-	const [increaseCountEvents$, increaseCount] = component.useEvent(
-		'increaseCount'
-	);
-
-	// console.log(store);
-	const count$ = store.observe(getCount);
-	console.log(count$);
-	const combine$ = combineLatest(count$, increaseCountEvents$).pipe(
-		startWith({
-			count: 0,
-			increaseCount
-		}),
-		scan(({ count, ...props }) => ({
-			...props,
-			count: count + 1
-		})),
-		map(toProps)
-	);
-
-	// map(actions.increaseCountAction),
-	//map(toDispatch),
-	return combine$;
-};
-const handler = initialProps => effect => {
-	const { store } = initialProps;
-
-	if (effect.type === 'INCREMENT') {
-		store.dispatch(effect.payload);
-	}
-};
-
-const toDispatch = action => ({
-	type: action.type,
-	payload: action.payload
+const mapStateToProps = state => ({
+	count: state.count.count
 });
 
+const CounterWithRedux = connect(
+	mapStateToProps,
+	{
+		addCount: actions.requestIncreaseCount
+	}
+)(Counter);
+
+const getCount = state => state.count;
+
+const aperture = (component, { storeContext }) => {
+	// const [addCount$, addCount] = component.useEvent('addCount', 'NONE')
+	const incrementEvent$ = storeContext.observe(
+		actionTypes.REQUEST_INCREMENT
+	);
+	// console.log(addCount$);
+	// console.log(incrementEvent$);
+	return incrementEvent$.pipe(
+		map(addCountAction => {
+			const { count } = storeContext.getState().count;
+			console.log('PROPS OF VALUES', count, addCountAction);
+			return actions.increaseCountAction(count + 1);
+		})
+	);
+};
+const handler = initialProps => effect => {
+	const { storeContext } = initialProps;
+	console.log('DISPATCH CALLED', initialProps, effect);
+	if (effect.type === 'INCREMENT') {
+		console.log('DISPATCHED: ', effect);
+		return storeContext.dispatch(effect);
+	}
+	return;
+};
+
 const CounterWithEffects = withEffects(aperture, { handler })(
-	Counter
+	CounterWithRedux
 );
 
 class CounterContainer extends Component {
 	render() {
 		return (
 			<GeneralConsumer>
-				{({ store }) => <CounterWithEffects store={store} />}
+				{({ storeContext }) => (
+					<CounterWithEffects storeContext={storeContext} />
+				)}
 			</GeneralConsumer>
 		);
 	}

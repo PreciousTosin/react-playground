@@ -21,7 +21,7 @@ class App extends Component {
 		};
 	}
 	render() {
-		const context = { style: this.state, store: store };
+		const context = { style: this.state, storeContext: store };
 		return (
 			<div className="App">
 				<GeneralProvider value={context}>

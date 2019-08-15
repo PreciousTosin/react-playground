@@ -1,36 +1,36 @@
 {
-	"name": "react-features-playground",
-	"version": "1.0.0",
-	"description": "",
-	"keywords": [],
-	"main": "src/index.js",
-	"dependencies": {
-		"connected-react-router": "latest",
-		"history": "latest",
-		"react": "16.5.2",
-		"react-dom": "16.5.2",
-		"react-redux": "latest",
-		"react-router": "4.3.1",
-		"react-router-config": "4.4.0-beta.6",
-		"react-router-dom": "4.3.1",
-		"react-router-redux": "4.0.8",
-		"react-scripts": "2.0.3",
-		"redux": "latest",
-		"refract-redux-rxjs": "1.2.0",
-		"refract-rxjs": "latest",
-		"rxjs": "latest"
-	},
-	"devDependencies": {},
-	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test --env=jsdom",
-		"eject": "react-scripts eject"
-	},
-	"browserslist": [
-		">0.2%",
-		"not dead",
-		"not ie <= 11",
-		"not op_mini all"
-	]
+  "name": "react-features-playground",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "connected-react-router": "6.5.2",
+    "history": "latest",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-redux": "7.1.0",
+    "react-router": "5.0.1",
+    "react-router-config": "5.0.1",
+    "react-router-dom": "5.0.1",
+    "react-router-redux": "4.0.8",
+    "react-scripts": "3.0.1",
+    "redux": "latest",
+    "refract-redux-rxjs": "1.2.0",
+    "refract-rxjs": "latest",
+    "rxjs": "latest"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
