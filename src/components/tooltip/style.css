@@ -133,3 +133,13 @@
 #tooltip.off {
 	display: none;
 }
+
+svg {
+	width: 20px;
+	height: 20px;
+	fill: lightslategray;
+}
+
+.delete-svg svg {
+	fill: red;
+}

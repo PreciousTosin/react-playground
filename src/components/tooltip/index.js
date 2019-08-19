@@ -1,220 +1,90 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+
+import ToolTip from './tooltip';
 
 import './style.css';
 
-class ToolTip extends Component {
-	constructor(props) {
-		super(props);
-		this.state = { visible: false, x: 0, y: 0, type: 'none' };
-	}
+const icon = (
+	<svg
+		aria-hidden="true"
+		focusable="false"
+		data-prefix="fas"
+		data-icon="times"
+		className="svg-inline--fa fa-times fa-w-11"
+		role="img"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 352 512"
+	>
+		<path
+			fill=""
+			d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+		/>
+	</svg>
+);
 
-	render() {
-		let { state } = this;
+const Button = props => <button {...props}>Tooltip Button</button>;
+const DeleteIcon = props => (
+	<span class="delete-svg" {...props}>
+		{icon}
+	</span>
+);
 
-		let visibility = state.visible === true ? 'on' : 'off';
+const withToolTip = WrappedComponent => {
+	return class extends Component {
+		constructor(props) {
+			super(props);
 
-		let style = {
-			left: state.x + window.scrollX + 'px',
-			top: state.y + window.scrollY + 'px'
-		};
+			this.setupRefs();
 
-		let classNames = {};
-
-		if (state.type != null && state.type !== 'none') {
-			classNames[state.type] = true;
+			this.setupEvents();
 		}
 
-		classNames[visibility] = true;
+		setupRefs() {
+			this.toolTip = React.createRef();
+		}
 
-		return (
-			<div
-				id="tooltip"
-				className={Object.keys(classNames).join(' ')}
-				style={style}
-			>
-				<div className="tooltip-arrow" />
-				<div className="tooltip-inner">ToolTip Component</div>
-			</div>
-		);
-	}
-	componentDidMount() {}
+		setupEvents() {
+			this.handleOnMouseOver = this.handleOnMouseOver.bind(this);
+			this.handleOnMouseOut = this.handleOnMouseOut.bind(this);
+		}
 
-	componentWillUnmount() {}
+		handleOnMouseOut(evt) {
+			this.toolTip.current.hide();
+		}
 
-	pastShow(hoverRect) {
-		// position the tooltip after showing it
+		handleOnMouseOver(evt) {
+			// get hovered element reference
+			let el = evt.currentTarget;
 
-		let ttNode = ReactDOM.findDOMNode(this);
+			if (el != null) {
+				let rect = el.getBoundingClientRect();
 
-		if (ttNode != null) {
-			let x = 0,
-				y = 0;
-
-			const docWidth = document.documentElement.clientWidth,
-				docHeight = document.documentElement.clientHeight;
-
-			let rx = hoverRect.x + hoverRect.width, // most right x
-				lx = hoverRect.x, // most left x
-				ty = hoverRect.y, // most top y
-				by = hoverRect.y + hoverRect.height; // most bottom y
-
-			// tool tip rectange
-			let ttRect = ttNode.getBoundingClientRect();
-
-			let bRight = rx + ttRect.width <= window.scrollX + docWidth;
-			let bLeft = lx - ttRect.width >= 0;
-
-			let bAbove = ty - ttRect.height >= 0;
-			let bBellow = by + ttRect.height <= window.scrollY + docHeight;
-
-			let newState = {};
-
-			// the tooltip doesn't fit to the right
-			if (bRight) {
-				x = rx;
-
-				y = ty + (hoverRect.height - ttRect.height);
-
-				if (y < 0) {
-					y = ty;
-				}
-
-				newState.type = 'right';
-			} else if (bBellow) {
-				y = by;
-
-				x = lx + (hoverRect.width - ttRect.width);
-
-				if (x < 0) {
-					x = lx;
-				}
-
-				newState.type = 'bottom';
-			} else if (bLeft) {
-				x = lx - ttRect.width;
-
-				y = ty + (hoverRect.height - ttRect.height);
-
-				if (y < 0) {
-					y = ty;
-				}
-
-				newState.type = 'left';
-			} else if (bAbove) {
-				y = ty - ttRect.height;
-
-				x = lx + (hoverRect.width - ttRect.width);
-
-				if (x < 0) {
-					x = lx;
-				}
-
-				newState.type = 'top';
+				this.toolTip.current.show(rect);
 			}
-
-			newState = { ...newState, x: x, y: y };
-
-			this.setState(newState);
 		}
-	}
-	show(hoverRect) {
-		let { pastShow } = this;
 
-		// setState will execute the pastShow with hoverRect as the tool tip becomes visible
-		this.setState({ visible: true }, pastShow.bind(this, hoverRect));
-	}
-	hide() {
-		this.setState({ visible: false });
-	}
-}
+		render() {
+			// let { createBtn } = this;
+			var { handleOnMouseOver, handleOnMouseOut } = this;
 
-class Btn extends React.Component {
-	events = {};
-	constructor(props) {
-		super(props);
+			return (
+				<div>
+					<h2 className="mt-4">Tool Tip in Action</h2>
 
-		this.state = {
-			id: props.id,
-			text: props.children
-		};
-
-		this.events.onMouseOver = props.onMouseOver;
-		this.events.onMouseOut = props.onMouseOut;
-	}
-	render() {
-		return (
-			<button
-				type="button"
-				id={this.state.id}
-				onMouseOver={this.events.onMouseOver}
-				onMouseLeave={this.events.onMouseOut}
-			>
-				{this.state.text}
-			</button>
-		);
-	}
-}
-
-class App extends React.Component {
-	constructor(props) {
-		super(props);
-		console.log('* app constructor');
-
-		this.setupRefs();
-
-		this.setupEvents();
-	}
-	setupRefs() {
-		this.toolTip = React.createRef();
-	}
-	setupEvents() {
-		this.createBtn = this.createBtn.bind(this);
-		this.handleOnMouseOver = this.handleOnMouseOver.bind(this);
-		this.handleOnMouseOut = this.handleOnMouseOut.bind(this);
-	}
-	handleOnMouseOut(evt) {
-		this.toolTip.current.hide();
-	}
-	handleOnMouseOver(evt) {
-		// get hovered element reference
-		let el = evt.currentTarget;
-
-		if (el != null) {
-			let rect = el.getBoundingClientRect();
-
-			this.toolTip.current.show(rect);
+					<WrappedComponent
+						id="btnRight"
+						onMouseOver={handleOnMouseOver}
+						onMouseOut={handleOnMouseOut}
+					>
+						{this.props.children}
+					</WrappedComponent>
+					<ToolTip ref={this.toolTip} />
+				</div>
+			);
 		}
-	}
-	createBtn(id, text) {
-		var { handleOnMouseOver, handleOnMouseOut } = this;
+	};
+};
 
-		return (
-			<Btn
-				id={id}
-				onMouseOver={handleOnMouseOver}
-				onMouseOut={handleOnMouseOut}
-			>
-				{text}
-			</Btn>
-		);
-	}
-	render() {
-		let { createBtn } = this;
+const EnhancedComponent = withToolTip(DeleteIcon);
 
-		return (
-			<div>
-				<h2 className="mt-4">Tool Tip in Action</h2>
-
-				{createBtn('btnLeft', 'click 1')}
-				{createBtn('btnRight', 'click 2')}
-				{createBtn('btnBtmR', 'click 3')}
-				{createBtn('btnCenter', 'click 4')}
-				<ToolTip ref={this.toolTip} />
-			</div>
-		);
-	}
-	componentDidMount() {}
-}
-
-export default App;
+export default EnhancedComponent;
