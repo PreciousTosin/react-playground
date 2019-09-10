@@ -85,6 +85,6 @@ const withToolTip = WrappedComponent => {
 	};
 };
 
-const EnhancedComponent = withToolTip(DeleteIcon);
+const EnhancedComponent = withToolTip(Button);
 
 export default EnhancedComponent;
